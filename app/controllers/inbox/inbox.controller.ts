@@ -3,6 +3,7 @@ import { Auth, WebSocket } from "../../../system";
 import { Controller, Get, Post } from "../../../system/decorator";
 import { authorization } from "../../middlewares/authorization";
 import { decorateHtmlResponse } from "../../middlewares/common/decorateHtmlResponse";
+import { attachmentUpload } from "../../middlewares/common/upload";
 import { InboxService } from "./inbox.service";
 
 @Controller("/inbox")
@@ -50,11 +51,13 @@ export class InboxController {
     });
   }
 
-  @Post("/send")
+  @Post("/send", { middleware: [authorization(), attachmentUpload] })
   async sendMessage(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const { message, conversationId } = req.body;
-    if (message || (req.files && req.files.length > 0)) {
+    // if (message || (req.files && req.files.length > 0)) {
+    console.log(message);
+    if (message) {
       const result = await InboxService.getInstance().storeMessage(req, res);
 
       let attachments = null;
@@ -62,9 +65,9 @@ export class InboxController {
       // emit socket event
       WebSocket.io.emit("message", {
         message: {
-          conversation_id: conversationId,
+          conversation_id: Number(conversationId),
           sender: {
-            id: user.userid,
+            id: Number(user.userid),
             name: user.username,
             avatar: user.avatar || null,
           },
@@ -81,7 +84,8 @@ export class InboxController {
     } else {
       res.status(500).json({
         success: false,
-        message: "message text or attachment is required!",
+        // message: "message text or attachment is required!",
+        message: "message text is required!",
       });
     }
   }

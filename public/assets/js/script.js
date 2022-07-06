@@ -149,7 +149,7 @@ async function getMessages(conversation_id, current_conversation_name) {
           const showAvatar =
             message.sender.id === loggedinUserId
               ? ""
-              : `<img src="${senderAvatar}" alt="${message.sender.name}" />`;
+              : `<img src="${senderAvatar}" alt="${message.sender.username}" />`;
 
           // message attachments
           let attachments = '<div class="attachments">';
@@ -216,10 +216,11 @@ form.onsubmit = async function (event) {
 
   // prepare the form data
   const formData = new FormData(form);
-  formData.append("receiverId", participant.id);
-  formData.append("receiverName", participant.username);
+  formData.append("receiverId", participant.participant.id);
+  formData.append("receiverName", participant.participant.username);
   // formData.append("avatar", participant.avatar || "");
-  formData.append("conversationId", current_conversation_id);
+  // formData.append("conversationId", current_conversation_id);
+  formData.append("conversationId", participant.id);
 
   // send the request to server
   let response = await fetch("/inbox/send", {

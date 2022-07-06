@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { Auth } from "../../../system";
 
 const prisma = new PrismaClient();
 
@@ -75,6 +76,10 @@ export class InboxService {
       where: {
         id: conversationId,
       },
+      include: {
+        creator: true,
+        participant: true,
+      },
     });
 
     return { message, conversation };
@@ -92,14 +97,16 @@ export class InboxService {
   }
 
   async storeMessage(req: Request, res: Response) {
-    const { conversationId, receiverId, senderId, text } = req.body;
+    const { conversationId, receiverId, message } = req.body;
+
+    const user = Auth.userByCookie(req.signedCookies);
 
     const result = await prisma.message.create({
       data: {
-        conversationId: conversationId,
-        senderId: senderId,
-        receiverId: receiverId,
-        text: text,
+        conversationId: Number(conversationId),
+        senderId: Number(user.userid),
+        receiverId: Number(receiverId),
+        text: message,
       },
     });
 
