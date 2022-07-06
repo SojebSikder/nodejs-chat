@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Auth } from "../../../system/core";
 import { env } from "../../../system/util";
 
@@ -20,6 +21,7 @@ export function decorateHtmlResponse(page_title = null) {
     res.locals.errors = {};
     res.locals.data = {};
     res.locals.message = "";
+    res.locals.moment = moment;
     next();
   };
 }

@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { Auth, WebSocket } from "../../../system";
 import { Controller, Get, Post } from "../../../system/decorator";
 import { authorization } from "../../middlewares/authorization";
-import { checkLogin } from "../../middlewares/common/checkLogin";
 import { decorateHtmlResponse } from "../../middlewares/common/decorateHtmlResponse";
 import { attachmentUpload } from "../../middlewares/common/upload";
 import { InboxService } from "./inbox.service";
@@ -59,8 +58,7 @@ export class InboxController {
   async sendMessage(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const { message, conversationId } = req.body;
-    // if (message || (req.files && req.files.length > 0)) {
-    if (message) {
+    if (message || (req.files && req.files.length > 0)) {
       const result = await InboxService.getInstance().storeMessage(req, res);
 
       let attachments = null;
