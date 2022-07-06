@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+    /* Language and Environment */
+    "target": "es2020",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Modules */
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "dist/",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Completeness */
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "typings/*",
+    "node_modules"
+  ]
+}

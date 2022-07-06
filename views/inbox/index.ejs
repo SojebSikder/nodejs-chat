@@ -1,0 +1,80 @@
+<%- include('../partials/header'); -%> <%- include('../partials/navbar'); -%>
+<div class="container">
+  <h1>Inbox</h1>
+
+  <% if(message){ %>
+  <h3><%= message %></h3>
+  <% } %>
+
+  <div class="d-flex justify-content-center">
+
+    <div class="conversation-container">
+      List of conversations
+
+      <% for( let index = 0; index < data.conversation.length; index++ ) { %>
+      <div class="container" onclick="getMessages('<%= data.conversation[index].id %>', '<%= data.conversation[index].participant.username %>')">
+        <img src="/w3images/bandmember.jpg" alt="Avatar">
+        <span><%= data.conversation[index].participant.username  %></span>
+        <p></p>
+        <span class="time-right"><%= data.conversation[index].updatedAt  %></span>
+      </div>
+      <% } %>
+
+
+    </div>
+
+    <div id="chat-title">
+      <span id="conversation-partner"></span>
+      <img src="./images/trash.png" alt="Delete Conversation" />
+    </div>
+
+    <div id="chat-message-list">
+      <div class="nothing">select a conversation</div>
+    </div>
+    
+    <div style="margin-right: 20px;"></div>
+    <!-- 
+    <div class="chat-container">
+      <div class="container">
+        <img src="/w3images/bandmember.jpg" alt="Avatar">
+        <p>Hello. How are you today?</p>
+        <span class="time-right">11:00</span>
+      </div>
+
+      <div class="container darker">
+        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
+        <p>Hey! I'm fine. Thanks for asking!</p>
+        <span class="time-left">11:01</span>
+      </div>
+
+      <div class="container">
+        <img src="/w3images/bandmember.jpg" alt="Avatar">
+        <p>Sweet! So, what do you wanna do today?</p>
+        <span class="time-right">11:02</span>
+      </div>
+
+      <div class="container darker">
+        <img src="/w3images/avatar_g2.jpg" alt="Avatar" class="right">
+        <p>Nah, I dunno. Play soccer.. or learn more coding perhaps?</p>
+        <span class="time-left">11:05</span>
+      </div>
+    </div> -->
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <!-- send message form -->
+    <form id="chat-form" method="post" enctype="multipart/form-data">
+      <!-- <label for="attachment">
+      <img src="./images/attachment.png" alt="Add Attachment" />
+    </label>
+    <input type="file" multiple name="attachment" class="hide" id="attachment" /> -->
+      <input class="chat-input" type="text" name="message" placeholder="Type a message" autocomplete="off" />
+    </form>
+  </div>
+
+  <div id="toast"></div>
+
+
+
+</div>
+<%- include('../partials/footer'); -%>
