@@ -15,11 +15,10 @@ export class InboxController {
     const result = await InboxService.getInstance().getInbox({
       userId: user.userid,
     });
-    console.log(result);
     res.render("inbox", { data: { conversation: result } });
   }
 
-  @Get("/:conversationId")
+  @Get("/:conversationId", { middleware: [decorateHtmlResponse("Inbox")] })
   async getMessages(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const { conversationId } = req.query;
@@ -37,7 +36,7 @@ export class InboxController {
     });
   }
 
-  @Post("/store-conversation")
+  @Post("/store-conversation", { middleware: [authorization()] })
   async createConversation(req: Request, res: Response) {
     const { receiverId } = req.body;
     const user = Auth.userByCookie(req.signedCookies);
@@ -56,14 +55,13 @@ export class InboxController {
     const user = Auth.userByCookie(req.signedCookies);
     const { message, conversationId } = req.body;
     // if (message || (req.files && req.files.length > 0)) {
-    console.log(message);
     if (message) {
       const result = await InboxService.getInstance().storeMessage(req, res);
 
       let attachments = null;
 
       // emit socket event
-      WebSocket.io.emit("message", {
+      WebSocket.io().emit("message", {
         message: {
           conversation_id: Number(conversationId),
           sender: {
