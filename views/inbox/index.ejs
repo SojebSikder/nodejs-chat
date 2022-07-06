@@ -107,7 +107,7 @@
   // socket initialization
   const socket = io("<%= process.env.APP_URL %>");
   // handle new/live incoming message from socket
-  socket.on("new_message", (data) => {
+  socket.on("message", (data) => {
     // only respond if current conversation is open in any client
     if (data.message.conversation_id == current_conversation_id) {
       // message class
@@ -177,7 +177,7 @@
       const {
         data,
         user,
-        conversation_id
+        // conversation_id
       } = result;
 
       participant = data.participant;
@@ -278,9 +278,9 @@
     const formData = new FormData(form);
     formData.append("receiverId", participant.participant.id);
     formData.append("receiverName", participant.participant.username);
-    // formData.append("avatar", participant.avatar || "");
-    // formData.append("conversationId", current_conversation_id);
-    formData.append("conversationId", participant.id);
+    formData.append("avatar", participant.avatar || "");
+    formData.append("conversationId", current_conversation_id);
+    // formData.append("conversationId", participant.id);
 
     // send the request to server
     let response = await fetch("/inbox/send", {
