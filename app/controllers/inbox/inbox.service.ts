@@ -61,12 +61,14 @@ export class InboxService {
           select: {
             id: true,
             username: true,
+            avatar: true,
           },
         },
         receiver: {
           select: {
             id: true,
             username: true,
+            avatar: true,
           },
         },
       },

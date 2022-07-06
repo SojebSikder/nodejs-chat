@@ -6,7 +6,8 @@ import { Auth } from "../../system/core/Auth";
 export function authorization() {
   return Auth.authToken(function (error, data, req, res) {
     if (error) {
-      res.send("your are not allowed to access this page");
+      // res.send("your are not allowed to access this page");
+      res.redirect("/login");
     }
   });
 }

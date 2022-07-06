@@ -69,6 +69,7 @@ model User {
   password  String   @db.VarChar(255)
   role      String?
   profile   Profile?
+  avatar    String?
 
   creator     Conversation[] @relation("creator")
   participant Conversation[] @relation("participant")

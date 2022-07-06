@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Auth, WebSocket } from "../../../system";
 import { Controller, Get, Post } from "../../../system/decorator";
 import { authorization } from "../../middlewares/authorization";
+import { checkLogin } from "../../middlewares/common/checkLogin";
 import { decorateHtmlResponse } from "../../middlewares/common/decorateHtmlResponse";
 import { attachmentUpload } from "../../middlewares/common/upload";
 import { InboxService } from "./inbox.service";
@@ -9,7 +10,9 @@ import { InboxService } from "./inbox.service";
 @Controller("/inbox")
 export class InboxController {
   //
-  @Get("", { middleware: [decorateHtmlResponse("Inbox"), authorization()] })
+  @Get("", {
+    middleware: [decorateHtmlResponse("Inbox"), authorization()],
+  })
   async showInboxPage(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const result = await InboxService.getInstance().getInbox({
@@ -18,7 +21,9 @@ export class InboxController {
     res.render("inbox", { data: { conversation: result } });
   }
 
-  @Get("/:conversationId", { middleware: [decorateHtmlResponse("Inbox")] })
+  @Get("/:conversationId", {
+    middleware: [decorateHtmlResponse("Inbox"), authorization()],
+  })
   async getMessages(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const { conversationId } = req.query;
