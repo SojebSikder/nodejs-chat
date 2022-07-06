@@ -116,8 +116,6 @@
         "you-message" :
         "other-message";
 
-        console.log(data.message.sender.id);
-        
       const senderAvatar = data.message.sender.avatar ?
         `<img src="./uploads/avatars/${data.message.sender.avatar}" alt="${data.message.sender.name}" />` :
         `<img src="./images/nophoto.png" alt="${data.message.sender.name}" />`;
@@ -193,10 +191,17 @@
             let senderAvatar = message.sender.avatar ?
               `./uploads/avatars/${message.sender.avatar}` :
               "./images/nophoto.png";
-            const messageClass =
-              message.sender.id === loggedinUserId ?
-              "you-message" :
-              "other-message";
+            // const messageClass =
+            //   message.sender.id === loggedinUserId ?
+            //   "you-message" :
+            //   "other-message";
+            let messageClass;
+
+            if (message.sender.id == loggedinUserId) {
+              messageClass = "you-message";
+            } else {
+              messageClass = "other-message";
+            }
 
             const showAvatar =
               message.sender.id === loggedinUserId ?
