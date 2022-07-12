@@ -21,7 +21,7 @@ export function boot(app: Express) {
 
   // socket
   let users = [];
-  let conversations = [];
+  let conversations = ["1"];
   WebSocket.io().on("connection", function (socket) {
     let currentUser, currentConversation;
     console.log("A user connected");
@@ -40,8 +40,6 @@ export function boot(app: Express) {
     // });
     // set user id
     socket.on("setUserId", function (data) {
-      console.log(data);
-
       let participant, conversation;
 
       let randParticipant = ArrayHelper.randomElement(users);
@@ -62,13 +60,16 @@ export function boot(app: Express) {
       currentUser = data.userId;
       currentConversation = data.conversationId;
 
+      // generate conversation id
+      // let cuniqeId = "cid" + Math.random().toString(16).slice(2);
+      let conversationId = conversation;
+
       if (users.indexOf(data.userId) > -1) {
         // if exists userid then emit userExists
         socket.emit("userExists", data.userId + " Please start again.");
       } else {
         users.push(data.userId);
-        conversations.push(data.conversationId);
-        
+
         socket.emit("userSet", {
           username: data.userId,
           participant: participant,
