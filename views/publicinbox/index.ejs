@@ -15,8 +15,12 @@
   };
 
   function setUserId() {
-    let uniqeId = "id" + Math.random().toString(16).slice(2)
-    socket.emit('setUserId', uniqeId);
+    let userId = sessionStorage.getItem("username");
+    if (!userId) {
+      let uniqeId = "id" + Math.random().toString(16).slice(2)
+      sessionStorage.setItem("username", uniqeId);
+    }
+    socket.emit('setUserId', userId);
   };
   let user;
   let participant;
