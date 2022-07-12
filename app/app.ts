@@ -21,8 +21,9 @@ export function boot(app: Express) {
 
   // socket
   let users = [];
+  let conversations = [];
   WebSocket.io().on("connection", function (socket) {
-    let currentUser;
+    let currentUser, currentConversation;
     console.log("A user connected");
     // set username
     // socket.on("setUsername", function (data) {
@@ -41,23 +42,38 @@ export function boot(app: Express) {
     socket.on("setUserId", function (data) {
       console.log(data);
 
-      let participant;
+      let participant, conversation;
+
       let randParticipant = ArrayHelper.randomElement(users);
-      if (data == randParticipant) {
+      if (data.userId == randParticipant) {
         randParticipant = ArrayHelper.randomElement(users);
       } else {
         participant = randParticipant;
       }
 
-      console.log(users);
-      currentUser = data;
-
-      if (users.indexOf(data) > -1) {
-        // if exists userid then emit userExists
-        socket.emit("userExists", data + " Please start again.");
+      let randConversation = ArrayHelper.randomElement(conversations);
+      if (data.conversationId == randConversation) {
+        randConversation = ArrayHelper.randomElement(conversations);
       } else {
-        users.push(data);
-        socket.emit("userSet", { username: data, participant: participant });
+        conversation = randConversation;
+      }
+
+      // set current user
+      currentUser = data.userId;
+      currentConversation = data.conversationId;
+
+      if (users.indexOf(data.userId) > -1) {
+        // if exists userid then emit userExists
+        socket.emit("userExists", data.userId + " Please start again.");
+      } else {
+        users.push(data.userId);
+        conversations.push(data.conversationId);
+        
+        socket.emit("userSet", {
+          username: data.userId,
+          participant: participant,
+          conversation: conversation,
+        });
       }
     });
 
@@ -66,12 +82,15 @@ export function boot(app: Express) {
       WebSocket.io().sockets.emit("newmsg", data);
     });
 
+    // when disconnect user
     socket.on("disconnect", function () {
       users = users.filter(function (v) {
         return v != currentUser;
       });
-
-      console.log("A user disconnected", currentUser);
+      conversations = conversations.filter(function (v) {
+        return v != currentConversation;
+      });
+      console.log(`A user disconnected`, currentUser);
     });
   });
 

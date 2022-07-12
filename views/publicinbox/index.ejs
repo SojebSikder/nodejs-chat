@@ -16,26 +16,37 @@
 
   function setUserId() {
     let userId = sessionStorage.getItem("username");
-    if (!userId) {
+    if (userId == null) {
       let uniqeId = "id" + Math.random().toString(16).slice(2)
       sessionStorage.setItem("username", uniqeId);
     }
-    socket.emit('setUserId', userId);
+    let cuniqeId = "cid" + Math.random().toString(16).slice(2)
+
+    const data = {
+      userId: sessionStorage.getItem("username"),
+      conversationId: cuniqeId
+    }
+    socket.emit('setUserId', data);
   };
+
+
   let user;
   let participant;
+  let conversation;
   socket.on('userExists', function(data) {
     document.getElementById('error-container').innerHTML = data;
   });
   socket.on('userSet', function(data) {
     user = data.username;
     participant = data.participant;
+    conversation = data.conversation;
     document.body.innerHTML = `
     <div id="message-container"></div>
     <input type="text" id="message">
     <button type="button" name="button" onclick="sendMessage()">Send</button>
-    <div id=userId>userId: ${user}</div>
-    <div id=userId>participantId: ${participant}</div>
+    <div>userId: ${user}</div>
+    <div>participantId: ${participant}</div>
+    <div>conversationId: ${conversation}</div>
     `;
 
   });
@@ -55,7 +66,7 @@
     console.log(user);
     console.log(participant)
     console.log(data)
-    if (participant == data.participant) {
+    if (conversation == data.conversation) {
       document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
     }
   })
