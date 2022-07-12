@@ -8,19 +8,32 @@
 <script>
   let socket = io();
 
+  setUserId();
+
   function setUsername() {
     socket.emit('setUsername', document.getElementById('name').value);
   };
+
+  function setUserId() {
+    let uniqeId = "id" + Math.random().toString(16).slice(2)
+    socket.emit('setUserId', uniqeId);
+  };
   let user;
+  let participant;
   socket.on('userExists', function(data) {
     document.getElementById('error-container').innerHTML = data;
   });
   socket.on('userSet', function(data) {
     user = data.username;
+    participant = data.participant;
     document.body.innerHTML = `
     <div id="message-container"></div>
     <input type="text" id="message">
-    <button type="button" name="button" onclick="sendMessage()">Send</button>`;
+    <button type="button" name="button" onclick="sendMessage()">Send</button>
+    <div id=userId>userId: ${user}</div>
+    <div id=userId>participantId: ${participant}</div>
+    `;
+
   });
 
   function sendMessage() {
@@ -28,13 +41,17 @@
     if (msg) {
       socket.emit('msg', {
         message: msg,
-        user: user
+        user: user,
+        participant: participant
       });
       document.getElementById('message').value = ''
     }
   }
   socket.on('newmsg', function(data) {
-    if (user) {
+    console.log(user);
+    console.log(participant)
+    console.log(data)
+    if (participant == data.participant) {
       document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
     }
   })
@@ -42,8 +59,8 @@
 
 <body>
   <div id="error-container"></div>
-  <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
-  <button type="button" name="button" onclick="setUsername()">Let me chat!</button>
+  <!-- <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+  <button type="button" name="button" onclick="setUsername()">Let me chat!</button> -->
 </body>
 
 </html>
