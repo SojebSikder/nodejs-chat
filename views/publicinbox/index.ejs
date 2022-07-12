@@ -6,30 +6,31 @@
 </head>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var socket = io();
+  let socket = io();
 
   function setUsername() {
     socket.emit('setUsername', document.getElementById('name').value);
   };
-  var user;
+  let user;
   socket.on('userExists', function(data) {
     document.getElementById('error-container').innerHTML = data;
   });
   socket.on('userSet', function(data) {
     user = data.username;
-    document.body.innerHTML = '<input type="text" id="message">\
-         <button type="button" name="button" onclick="sendMessage()">Send</button>\
-         <div id="message-container"></div>';
+    document.body.innerHTML = `
+    <div id="message-container"></div>
+    <input type="text" id="message">
+    <button type="button" name="button" onclick="sendMessage()">Send</button>`;
   });
 
   function sendMessage() {
-    var msg = document.getElementById('message').value;
+    let msg = document.getElementById('message').value;
     if (msg) {
       socket.emit('msg', {
         message: msg,
         user: user
       });
-      msg = '';
+      document.getElementById('message').value = ''
     }
   }
   socket.on('newmsg', function(data) {
