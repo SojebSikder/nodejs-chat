@@ -4,15 +4,16 @@
 <head>
   <title>Hello world</title>
 </head>
+<link rel="stylesheet" href="/assets/css/style.css">
 <script src="/socket.io/socket.io.js"></script>
 <script>
   let socket = io();
 
   setUserId();
 
-  function setUsername() {
-    socket.emit('setUsername', document.getElementById('name').value);
-  };
+  // function setUsername() {
+  //   socket.emit('setUsername', document.getElementById('name').value);
+  // };
 
   function setUserId() {
     let userId = sessionStorage.getItem("username");
@@ -20,11 +21,9 @@
       let uniqeId = "id" + Math.random().toString(16).slice(2)
       sessionStorage.setItem("username", uniqeId);
     }
-    let cuniqeId = "cid" + Math.random().toString(16).slice(2)
 
     const data = {
       userId: sessionStorage.getItem("username"),
-      // conversationId: cuniqeId
     }
     socket.emit('setUserId', data);
   };
@@ -44,9 +43,12 @@
     <div id="message-container"></div>
     <input type="text" id="message">
     <button type="button" name="button" onclick="sendMessage()">Send</button>
-    <div>userId: ${user}</div>
-    <div>participantId: ${participant}</div>
-    <div>conversationId: ${conversation}</div>
+    <button type="button" onclick="location.reload();">New connection</button>
+    <div class="info-container">
+      <div>userId: ${user}</div>
+      <div>participantId: ${participant}</div>
+      <div>conversationId: ${conversation}</div>
+    </div>
     `;
 
   });

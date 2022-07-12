@@ -21,7 +21,7 @@ export function boot(app: Express) {
 
   // socket
   let users = [];
-  let conversations = ["1"];
+  let conversations = ["1", "2", "3"];
   WebSocket.io().on("connection", function (socket) {
     let currentUser, currentConversation;
     console.log("A user connected");
@@ -80,7 +80,13 @@ export function boot(app: Express) {
 
     socket.on("msg", function (data) {
       //Send message to everyone
-      WebSocket.io().sockets.emit("newmsg", data);
+      console.log("current:", currentUser);
+      console.log("participant:", data.participant);
+      console.log("data:", data);
+      console.log("-------------------------------");
+      if (currentUser == data.user) {
+        WebSocket.io().sockets.emit("newmsg", data);
+      }
     });
 
     // when disconnect user

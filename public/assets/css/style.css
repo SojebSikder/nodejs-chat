@@ -286,6 +286,17 @@ body {
   }
 }
 
+/* public chat section */
+.info-container {
+  padding: 8px;
+  background: #0a0909;
+  color: #7eff7e;
+  width: 300px;
+  height: auto;
+  margin: 8px;
+}
+/* end public chat section */
+
 @media (min-width: 992px) {
   body {
     overflow: auto !important;
