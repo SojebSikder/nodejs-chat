@@ -39,12 +39,14 @@
     user = data.username;
     participant = data.participant;
     conversation = data.conversation;
+    let nohere = participant == null ? "No one here. Please refresh again" : "";
     document.body.innerHTML = `
     <div id="message-container"></div>
     <input type="text" id="message">
     <button type="button" name="button" onclick="sendMessage()">Send</button>
     <button type="button" onclick="location.reload();">New connection</button>
     <div class="info-container">
+      <div style="color:red;">${nohere}</div>
       <div>userId: ${user}</div>
       <div>participantId: ${participant}</div>
       <div>conversationId: ${conversation}</div>
