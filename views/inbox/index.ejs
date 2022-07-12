@@ -6,10 +6,14 @@
   <% if(message){ %>
   <h3><%= message %></h3>
   <% } %>
+  
 
-  <div class="d-flex justify-content-center">
+  <div id="chat-container" class="d-flex justify-content-center">
 
-    <div class="conversation-container">
+    <div id="search-container">
+      <input type="text" placeholder="Search" />
+    </div>
+    <div id="conversation-list" class="conversation-container">
       List of conversations
 
       <% for( let index = 0; index < data.conversation.length; index++ ) { %>
@@ -48,11 +52,11 @@
   <div class="d-flex justify-content-center">
     <!-- send message form -->
     <form id="chat-form" method="post" enctype="multipart/form-data">
-      <label for="attachment">
+      <!-- <label for="attachment">
         <i class="bi bi-paperclip"></i>
       </label>
 
-      <input type="file" multiple name="attachment" class="hide" id="attachment" />
+      <input type="file" multiple name="attachment" class="hide" id="attachment" /> -->
       <input class="chat-input" type="text" name="message" placeholder="Type a message" autocomplete="off" />
     </form>
   </div>
@@ -91,8 +95,8 @@
         "other-message";
 
       const senderAvatar = data.message.sender.avatar ?
-        `<img src="./uploads/avatars/${data.message.sender.avatar}" alt="${data.message.sender.name}" />` :
-        `<img src="./images/nophoto.png" alt="${data.message.sender.name}" />`;
+        `<img class="avatar" src="./uploads/profile/${data.message.sender.avatar}" alt="${data.message.sender.name}" />` :
+        `<img class="avatar" src="./uploads/profile/nophoto.png" alt="${data.message.sender.name}" />`;
 
       // message attachments
       let attachments = '<div class="attachments">';
@@ -163,8 +167,8 @@
         if (data.messages.length > 0) {
           data.messages.forEach((message) => {
             let senderAvatar = message.sender.avatar ?
-              `./uploads/avatars/${message.sender.avatar}` :
-              "./images/nophoto.png";
+              `./uploads/profile/${message.sender.avatar}` :
+              "./uploads/profile/nophoto.png";
             // const messageClass =
             //   message.sender.id === loggedinUserId ?
             //   "you-message" :
@@ -180,7 +184,7 @@
             const showAvatar =
               message.sender.id === loggedinUserId ?
               "" :
-              `<img src="${senderAvatar}" alt="${message.sender.username}" />`;
+              `<img class="avatar" src="${senderAvatar}" alt="${message.sender.username}" />`;
 
             // message attachments
             let attachments = '<div class="attachments">';

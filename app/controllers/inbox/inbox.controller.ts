@@ -54,7 +54,9 @@ export class InboxController {
     });
   }
 
-  @Post("/send", { middleware: [authorization(), attachmentUpload] })
+  @Post("/send", {
+    middleware: [authorization(), attachmentUpload("attachments")],
+  })
   async sendMessage(req: Request, res: Response) {
     const user = Auth.userByCookie(req.signedCookies);
     const { message, conversationId } = req.body;
