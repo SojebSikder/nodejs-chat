@@ -60,7 +60,7 @@ var Epsile = new function () {
 
 		socket.on('conn', function () { // Connected
 			chatMainDiv.innerHTML = "";
-			logChat(0, "You are now chatting with a random stranger. Say hi!");
+			logChat(0, "<br/>You are now chatting with a random stranger. Say hi!");
 			disconnectButton.disabled = false;
 			disconnectButton.value = "Disconnect";
 			chatArea.disabled = false;
