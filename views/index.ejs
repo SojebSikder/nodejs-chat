@@ -1,12 +1,13 @@
 <%- include('./partials/header'); -%>
-<%- include('./partials/navbar'); -%>
+
 <div class="container d-flex justify-content-center">
 
-  <div>
+  <div style="position: absolute;top: 30%;">
     <h1>Welcome to <%= title %> </h1>
     <a class="btn btn-primary" href="/public">Anonymous chat</a>
     <a class="btn btn-primary" href="/private">Private chat</a>
   </div>
+
 
   <% if(!loggedInUser){ %>
   <!-- <a class="btn" href="/login">Login</a>
