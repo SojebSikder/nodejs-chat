@@ -19,7 +19,7 @@ export function boot(app: Express) {
   const io = WebSocket.io();
   // socket
   // global variables, keeps the state of the app
-  var sockets = {},
+  let sockets = {},
     users = {},
     strangerQueue = "false",
     peopleActive = 0,
@@ -31,7 +31,7 @@ export function boot(app: Express) {
     return "0" + val;
   }
   function timestamp() {
-    var now = new Date();
+    let now = new Date();
     return (
       "[" +
       fillZero(now.getHours()) +
