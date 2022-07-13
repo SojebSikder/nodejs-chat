@@ -179,9 +179,6 @@ export function boot(app: Express) {
       currentConversation = data.conversationId;
       conversation = currentConversation;
 
-      console.log(data.isConversation)
-      console.log(conversation)
-
       if (privateUsers.indexOf(data.userId) > -1) {
         // if exists userid then emit userExists
         socket.emit("userExists", data.userId + " Please start again.");
@@ -198,10 +195,6 @@ export function boot(app: Express) {
 
     socket.on("msg", function (data) {
       //Send message to everyone
-      console.log("current:", currentUser);
-      console.log("participant:", data.participant);
-      console.log("data:", data);
-      console.log("-------------------------------");
       if (currentUser == data.user) {
         WebSocket.io().sockets.emit("newmsg", data);
       }
