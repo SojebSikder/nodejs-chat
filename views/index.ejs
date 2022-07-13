@@ -1,12 +1,15 @@
 <%- include('./partials/header'); -%>
 <%- include('./partials/navbar'); -%>
-<div class="container">
+<div class="container d-flex justify-content-center">
 
-  <h1>Welcome to Nodejs Chat</h1>
+  <div>
+    <h1>Welcome to <%= title %> </h1>
+    <a class="btn btn-primary" href="/public">Anonymous chat</a>
+  </div>
 
   <% if(!loggedInUser){ %>
-  <a class="btn" href="/login">Login</a>
-  <a class="btn" href="/register">Register</a>
+  <!-- <a class="btn" href="/login">Login</a>
+  <a class="btn" href="/register">Register</a> -->
   <% }else{ %>
   <div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -16,12 +19,7 @@
       <a class="btn btn-outline-success" href="/inbox">Chat</a>
     </div>
   </div>
-
   <% } %>
-  <br>
-  Or chat without account
-  <br>
-  <a class="btn btn-primary" href="/public">Anonymous chat</a>
 
 </div>
 
