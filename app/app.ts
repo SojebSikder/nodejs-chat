@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 // middleware imports
 import bodyParser from "body-parser";
 import { appConfig } from "../config/app";
-import { WebSocket } from "../system";
+import { ArrayHelper, WebSocket } from "../system";
 
 /**
  * Use any middleware here
@@ -155,4 +155,69 @@ export function boot(app: Express) {
   });
 
   //end socket
+  //---------------------------------------------------
+  // socket for private chat
+  // socket
+  let privateUsers = [];
+  let privateConversations = [];
+  WebSocket.io().on("connection", function (socket) {
+    let currentUser, currentConversation;
+    console.log("A user connected");
+    // set user id
+    socket.on("setUserId", function (data) {
+      let participant, conversation;
+
+      let randParticipant = ArrayHelper.randomElement(privateUsers);
+      if (data.userId == randParticipant) {
+        randParticipant = ArrayHelper.randomElement(privateUsers);
+      } else {
+        participant = randParticipant;
+      }
+
+      // set current user
+      currentUser = data.userId;
+      currentConversation = data.conversationId;
+      conversation = currentConversation;
+
+      console.log(data.isConversation)
+      console.log(conversation)
+
+      if (privateUsers.indexOf(data.userId) > -1) {
+        // if exists userid then emit userExists
+        socket.emit("userExists", data.userId + " Please start again.");
+      } else {
+        privateUsers.push(data.userId);
+
+        socket.emit("userSet", {
+          username: data.userId,
+          participant: participant,
+          conversation: conversation,
+        });
+      }
+    });
+
+    socket.on("msg", function (data) {
+      //Send message to everyone
+      console.log("current:", currentUser);
+      console.log("participant:", data.participant);
+      console.log("data:", data);
+      console.log("-------------------------------");
+      if (currentUser == data.user) {
+        WebSocket.io().sockets.emit("newmsg", data);
+      }
+    });
+
+    // when disconnect user
+    socket.on("disconnect", function () {
+      privateUsers = privateUsers.filter(function (v) {
+        return v != currentUser;
+      });
+      privateConversations = privateConversations.filter(function (v) {
+        return v != currentConversation;
+      });
+      console.log(`A user disconnected`, currentUser);
+    });
+  });
+
+  //end private chat socket
 }
