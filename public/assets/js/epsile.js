@@ -273,8 +273,8 @@ var Epsile = new function () {
 	window.addEventListener("focus", focused, false);
 	disconnectButton.addEventListener('click', this.doDisconnect, false);
 	chatArea.addEventListener("keypress", function (e) {
-		var kc = e.keyCode;
-		if(kc === 13) {
+		var kc = e.key;
+		if(kc === "Enter") {
 			if(!e.shiftKey) {
 				var msg = chatArea.value;
 				if(msg.length > 0) {
