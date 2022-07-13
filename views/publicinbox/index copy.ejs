@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Hello world</title>
+</head>
+<link rel="stylesheet" href="/assets/css/style.css">
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  let socket = io();
+
+  // start chat app
+  function startChat() {
+    setUserId();
+  }
+
+  // function setUsername() {
+  //   socket.emit('setUsername', document.getElementById('name').value);
+  // };
+
+  function setUserId() {
+    let userId = sessionStorage.getItem("username");
+    if (userId == null) {
+      let uniqeId = "id" + Math.random().toString(16).slice(2)
+      sessionStorage.setItem("username", uniqeId);
+    }
+
+    const data = {
+      userId: sessionStorage.getItem("username"),
+    }
+    socket.emit('setUserId', data);
+  };
+
+
+  let user;
+  let participant;
+  let conversation;
+  socket.on('userExists', function(data) {
+    document.getElementById('error-container').innerHTML = data;
+  });
+  socket.on('userSet', function(data) {
+    user = data.username;
+    participant = data.participant;
+    conversation = data.conversation;
+    let nohere = participant == null ? "No one connected. Please refresh again" : "";
+    document.body.innerHTML = `
+    <div id="message-container"></div>
+    <input type="text" id="message">
+    <button type="button" name="button" onclick="sendMessage()">Send</button>
+    <button type="button" onclick="location.reload();">New connection</button>
+    <div class="info-container">
+      <div id="nohere" style="color:red;">${nohere}</div>
+      <div>userId: ${user}</div>
+      <div>participantId: ${participant}</div>
+      <div>conversationId: ${conversation}</div>
+    </div>
+    `;
+
+  });
+
+  function sendMessage() {
+    let msg = document.getElementById('message').value;
+    if (msg) {
+      socket.emit('msg', {
+        message: msg,
+        user: user,
+        participant: participant,
+        conversation: conversation
+      });
+      document.getElementById('message').value = ''
+    }
+  }
+  socket.on('newmsg', function(data) {
+    console.log(conversation);
+    console.log(data);
+    if (conversation == data.conversation) {
+      document.getElementById('message-container').innerHTML += '<div><b>' + data.user + '</b>: ' + data.message + '</div>'
+    } else {
+      document.getElementById("nohere").innerHTML = "No one connected. Please refresh again";
+    }
+  })
+</script>
+
+<body>
+  <div id="error-container"></div>
+  <!-- <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+  <button type="button" name="button" onclick="setUsername()">Let me chat!</button> -->
+  <button class="start-btn" type="button" name="button" onclick="startChat()">Start</button>
+</body>
+
+</html>

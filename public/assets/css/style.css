@@ -295,6 +295,23 @@ body {
   height: auto;
   margin: 8px;
 }
+.start-btn {
+  padding: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #25b9ff;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+.start-btn:active {
+  background: #0a0909;
+  color: #7eff7e;
+}
+.start-btn:hover {
+  background: #302e2e;
+  color: #7eff7e;
+}
 /* end public chat section */
 
 @media (min-width: 992px) {
