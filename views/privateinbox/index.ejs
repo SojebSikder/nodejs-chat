@@ -5,10 +5,40 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- imports -->
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/socket.io/socket.io.js"></script>
   <title><%= title %></title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+      background-color: #111;
+      color: white;
+      font-size: 14px;
+      font-family: Helvetica, sans-serif;
+      overflow: hidden;
+    }
+
+    .panel {
+      background-color: #444;
+      position: absolute;
+      bottom: 0;
+    }
+
+    .message-container {
+      overflow-y: scroll;
+      position: absolute;
+      top: 0px;
+      bottom: 250px;
+    }
+  </style>
 </head>
-<link rel="stylesheet" href="/assets/css/style.css">
-<script src="/socket.io/socket.io.js"></script>
+
 <script>
   let socket = io();
 
@@ -72,25 +102,42 @@
     participant = data.participant;
     conversation = data.conversation;
     let privateLink = window.location.origin + "/private?conversationId=" + conversation;
-    document.body.innerHTML = `
-    <div id="message-container"></div>
-    <input type="text" id="message">
-    <button type="button" name="button" onclick="sendMessage()">Send</button>
-    <button type="button" onclick="location.reload();">New connection</button>
-    <div class="info-container">
-      <div>Share: 
-        <br/>
-        <label>${privateLink}</label>
-        
+    document.getElementById("container").innerHTML = `
+    <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+      <div class="p-2 message-container" id="message-container"></div>
+
+      <div class="panel">
+      <div>
+        <input autofocus place="write a message.." type="text" id="message">
+        <button class="btn btn-outline-primary" type="button" name="button" onclick="sendMessage()">Send</button>
+        <button class="btn btn-outline-primary" type="button" onclick="location.reload();">New connection</button>
       </div>
-      <br/>
-      <div>userId: ${user}</div>
-      <div>participantId: ${participant}</div>
-      <div>conversationId: ${conversation}</div>
+      
+      <div class="info-container">
+        <div>
+          Share: 
+          <br/>
+          <label>${privateLink}</label>
+        </div>
+        <br/>
+        <div>userId: ${user}</div>
+        <div>participantId: ${participant}</div>
+        <div>conversationId: ${conversation}</div>
+      </div>
+    </div>
+
     </div>
     `;
 
+
+    document.getElementById("message").addEventListener("keypress", function(e) {
+      var kc = e.key;
+      if (kc === "Enter") {
+        sendMessage()
+      }
+    }, false);
   });
+
 
   function sendMessage() {
     let msg = document.getElementById('message').value;
@@ -116,10 +163,16 @@
 </script>
 
 <body>
-  <div id="error-container"></div>
-  <!-- <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
-  <button type="button" name="button" onclick="setUsername()">Let me chat!</button> -->
-  <button class="start-btn" type="button" name="button" onclick="startChat()">Start</button>
+  <div class="container" id="container">
+    <div class="d-flex justify-content-center">
+      <div id="error-container"></div>
+      <!-- <input id="name" type="text" name="name" value="" placeholder="Enter your name!">
+      <button type="button" name="button" onclick="setUsername()">Let me chat!</button> -->
+      <button class="start-btn" type="button" name="button" onclick="startChat()">Start</button>
+    </div>
+
+  </div>
+
 </body>
 
 </html>
